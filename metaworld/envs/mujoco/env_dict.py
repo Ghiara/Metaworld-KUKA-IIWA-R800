@@ -179,7 +179,8 @@ ALL_V2_ENVIRONMENTS = OrderedDict((
     ('plate-slide-side-v2', SawyerPlateSlideSideEnvV2),
     ('plate-slide-back-v2', SawyerPlateSlideBackEnvV2),
     ('plate-slide-back-side-v2', SawyerPlateSlideBackSideEnvV2),
-    ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
+    # ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
+    ('peg-unplug-side-v2', SawyerPegUnplugSideEnv),
     ('soccer-v2', SawyerSoccerEnvV2),
     ('stick-push-v2', SawyerStickPushEnvV2),
     ('stick-pull-v2', SawyerStickPullEnvV2),
@@ -220,6 +221,62 @@ EASY_MODE_ARGS_KWARGS = {
 EASY_MODE_ARGS_KWARGS['reach-v1']['kwargs']['task_type'] = 'reach'
 EASY_MODE_ARGS_KWARGS['push-v1']['kwargs']['task_type'] = 'push'
 EASY_MODE_ARGS_KWARGS['pick-place-v1']['kwargs']['task_type'] = 'pick_place'
+
+################################################################
+################### Used for V2 Env ############################
+################################################################
+EASY_MODE_CLS_DICT_V2 = OrderedDict((
+    ('reach-v2', SawyerReachEnvV2),
+    ('push-v2', SawyerPushEnvV2),
+    ('pick-place-v2', SawyerPickPlaceEnvV2),
+    ('door-open-v2', SawyerDoorEnvV2),
+    ('drawer-open-v2', SawyerDrawerOpenEnvV2),
+    ('drawer-close-v2', SawyerDrawerCloseEnvV2),
+    ('button-press-topdown-v2', SawyerButtonPressTopdownEnvV2),
+    ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
+    ('window-open-v2', SawyerWindowOpenEnvV2),
+    ('window-close-v2', SawyerWindowCloseEnvV2)),)
+
+
+EASY_MODE_ARGS_KWARGS_V2 = {
+    key: dict(args=[],
+              kwargs={
+                  'task_id': list(ALL_V2_ENVIRONMENTS.keys()).index(key)
+              })
+    for key, _ in EASY_MODE_CLS_DICT_V2.items()
+}
+
+# EASY_MODE_ARGS_KWARGS_V2['reach-v2']['kwargs']['task_type'] = 'reach'
+# EASY_MODE_ARGS_KWARGS_V2['push-v2']['kwargs']['task_type'] = 'push'
+# EASY_MODE_ARGS_KWARGS_V2['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
+
+# we mix the version, select easy mode for training
+EASY_MODE_CLS_DICT_V3 = OrderedDict((
+    ('reach-v2', SawyerReachEnvV2),
+    ('push-v2', SawyerPushEnvV2),
+    ('pick-place-v2', SawyerReachPushPickPlaceEnv), # change to v1
+    ('door-open-v2', SawyerDoorEnv), # v1
+    ('drawer-open-v2', SawyerDrawerOpenEnv), # v1
+    ('drawer-close-v2', SawyerDrawerCloseEnv), # v1
+    ('button-press-topdown-v2', SawyerButtonPressTopdownEnvV2),
+    # ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
+    ('peg-unplug-side-v2', SawyerPegUnplugSideEnv),
+    ('window-open-v2', SawyerWindowOpenEnvV2),
+    ('window-close-v2', SawyerWindowCloseEnvV2)),)
+
+
+EASY_MODE_ARGS_KWARGS_V3 = {
+    key: dict(args=[],
+              kwargs={
+                  'task_id': list(ALL_V2_ENVIRONMENTS.keys()).index(key)
+              })
+    for key, _ in EASY_MODE_CLS_DICT_V3.items()
+}
+EASY_MODE_ARGS_KWARGS_V3['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
+############################################################################
+############################################################################
+
+
 
 
 MEDIUM_MODE_CLS_DICT = OrderedDict((

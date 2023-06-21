@@ -84,6 +84,9 @@ def _make_tasks(classes, args_kwargs, kwargs_override):
         assert len(args['args']) == 0
         env_cls = classes[env_name]
         env = env_cls()
+        #################################
+        # set False: random goal position
+        #################################
         env._freeze_rand_vec = False
         env._set_task_called = True
         rand_vecs = []
@@ -188,17 +191,49 @@ class ML45(Benchmark):
                                        _ML_OVERRIDE)
 
 
-class MT10(Benchmark):
+# class MT10(Benchmark):
 
+#     def __init__(self):
+#         super().__init__()
+#         self._train_classes = _env_dict.EASY_MODE_CLS_DICT
+#         self._test_classes = OrderedDict()
+#         train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS
+#         self._train_tasks = _make_tasks(self._train_classes,
+#                                         train_kwargs,
+#                                         _MT_OVERRIDE)
+#         self._test_tasks = []
+#         self.env_version = 1
+
+
+# class MT10(Benchmark):
+#     '''
+#     MT10-v2
+#     '''
+#     def __init__(self):
+#         super().__init__()
+#         self._train_classes = _env_dict.EASY_MODE_CLS_DICT_V2
+#         self._test_classes = OrderedDict()
+#         train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS_V2
+#         self._train_tasks = _make_tasks(self._train_classes,
+#                                         train_kwargs,
+#                                         _MT_OVERRIDE)
+#         self._test_tasks = []
+#         self.env_version = 2
+
+class MT10(Benchmark):
+    '''
+    version 3, we mix the v1 & v2 together
+    '''
     def __init__(self):
         super().__init__()
-        self._train_classes = _env_dict.EASY_MODE_CLS_DICT
+        self._train_classes = _env_dict.EASY_MODE_CLS_DICT_V3
         self._test_classes = OrderedDict()
-        train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS
+        train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS_V3
         self._train_tasks = _make_tasks(self._train_classes,
                                         train_kwargs,
                                         _MT_OVERRIDE)
         self._test_tasks = []
+        self.env_version = 3
 
 
 class MT50(Benchmark):

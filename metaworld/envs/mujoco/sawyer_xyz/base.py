@@ -267,3 +267,15 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
                 size=self._random_reset_space.low.size)
             self._last_rand_vec = rand_vec
             return rand_vec
+    
+    ####################################################
+    ################ modified by Y.Meng ################
+    ####################################################
+    def viewer_setup(self):
+        body_id = self.sim.model.geom_name2id("tableTop")
+        lookat = self.sim.data.geom_xpos[body_id]
+        for idx, value in enumerate(lookat):
+            self.viewer.cam.lookat[idx] = value
+        self.viewer.cam.distance = 2.0
+        self.viewer.cam.azimuth = 140.0
+        self.viewer.cam.elevation = -40.0
