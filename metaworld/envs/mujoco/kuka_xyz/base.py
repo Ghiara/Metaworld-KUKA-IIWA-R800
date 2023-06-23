@@ -61,7 +61,9 @@ class KukaMocapBase(MujocoEnv, metaclass=abc.ABCMeta):
             for i in range(sim.model.eq_data.shape[0]):
                 if sim.model.eq_type[i] == mujoco_py.const.EQ_WELD:
                     sim.model.eq_data[i, :] = np.array(
-                        [0., 0., 0., 1., 0., 0., 0.])
+                        # [0., 0., 0., 1., 0., 0., 0.]
+                        [0., 0., 0., 1., 0., 0., 0.]
+                        )
         sim.forward()
 
 
@@ -139,6 +141,10 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
     def set_xyz_action(self, action):
         action = np.clip(action, -1, 1)
         pos_delta = action * self.action_scale
+        #####################################
+        # static pos check for debug
+        #####################################
+        # new_mocap_pos = self.data.mocap_pos
         new_mocap_pos = self.data.mocap_pos + pos_delta[None]
 
         new_mocap_pos[0, :] = np.clip(
@@ -146,8 +152,11 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
             self.mocap_low,
             self.mocap_high,
         )
+
         self.data.set_mocap_pos('mocap', new_mocap_pos)
-        self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
+        # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
+        # self.data.set_mocap_quat('mocap', np.array([0, 1, 1, 0]))
+        self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
 
     def discretize_goal_space(self, goals):
         assert False
