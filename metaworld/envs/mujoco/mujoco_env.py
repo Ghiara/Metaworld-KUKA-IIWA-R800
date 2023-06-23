@@ -42,6 +42,7 @@ class MujocoEnv(gym.Env, abc.ABC):
             raise IOError("File %s does not exist" % model_path)
 
         self.frame_skip = frame_skip
+
         self.model = mujoco_py.load_model_from_path(model_path)
         self.sim = mujoco_py.MjSim(self.model)
         self.data = self.sim.data

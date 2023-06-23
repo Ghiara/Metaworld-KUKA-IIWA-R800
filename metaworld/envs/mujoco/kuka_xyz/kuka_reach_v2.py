@@ -59,7 +59,8 @@ class KukaReachEnvV2(KukaXYZEnv):
 
     @property
     def model_name(self):
-        return get_asset_full_path('sawyer_xyz/sawyer_reach_v2.xml')
+        # return get_asset_full_path('sawyer_xyz/sawyer_reach_v2.xml')
+        return get_asset_full_path('kuka_xyz/kuka_reach_v2.xml')
 
     @_assert_task_is_set
     def step(self, action):

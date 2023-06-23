@@ -236,6 +236,22 @@ class MT10(Benchmark):
         self.env_version = 3
 
 
+class MT10_KUKA(Benchmark):
+    '''
+    version 4, used for KUKA test
+    '''
+    def __init__(self):
+        super().__init__()
+        self._train_classes = _env_dict.EASY_MODE_CLS_DICT_V4
+        self._test_classes = OrderedDict()
+        train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS_V4
+        self._train_tasks = _make_tasks(self._train_classes,
+                                        train_kwargs,
+                                        _MT_OVERRIDE)
+        self._test_tasks = []
+        self.env_version = 4
+
+
 class MT50(Benchmark):
 
     def __init__(self):

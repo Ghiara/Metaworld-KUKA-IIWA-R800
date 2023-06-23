@@ -1,5 +1,11 @@
 from collections import OrderedDict
 
+# load kuka env for test
+from metaworld.envs.mujoco.kuka_xyz import (
+    KukaReachEnvV2,
+)
+
+
 from metaworld.envs.mujoco.sawyer_xyz import (
     SawyerNutAssemblyEnv,
     SawyerNutAssemblyEnvV2,
@@ -250,13 +256,17 @@ EASY_MODE_ARGS_KWARGS_V2 = {
 # EASY_MODE_ARGS_KWARGS_V2['push-v2']['kwargs']['task_type'] = 'push'
 # EASY_MODE_ARGS_KWARGS_V2['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
 
-# we mix the version, select easy mode for training
+################################################################
+################### Used for MIX Env ###########################
+################################################################
+
 EASY_MODE_CLS_DICT_V3 = OrderedDict((
     ('reach-v2', SawyerReachEnvV2),
     ('push-v2', SawyerPushEnvV2),
     ('pick-place-v2', SawyerReachPushPickPlaceEnv), # change to v1
     ('door-open-v2', SawyerDoorEnv), # v1
-    ('drawer-open-v2', SawyerDrawerOpenEnv), # v1
+    # ('drawer-open-v2', SawyerDrawerOpenEnv), # v1
+    ('faucet-open-v2', SawyerFaucetOpenEnvV2),
     ('drawer-close-v2', SawyerDrawerCloseEnv), # v1
     ('button-press-topdown-v2', SawyerButtonPressTopdownEnvV2),
     # ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
@@ -273,6 +283,32 @@ EASY_MODE_ARGS_KWARGS_V3 = {
     for key, _ in EASY_MODE_CLS_DICT_V3.items()
 }
 EASY_MODE_ARGS_KWARGS_V3['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
+
+################################################################
+################### Used for KUKA Env ##########################
+################################################################
+EASY_MODE_CLS_DICT_V4 = OrderedDict((
+    ('reach-v2', KukaReachEnvV2),
+    ('push-v2', SawyerPushEnvV2),
+    ('pick-place-v2', SawyerReachPushPickPlaceEnv), # change to v1
+    ('door-open-v2', SawyerDoorEnv), # v1
+    ('drawer-open-v2', SawyerDrawerOpenEnv), # v1
+    ('drawer-close-v2', SawyerDrawerCloseEnv), # v1
+    ('button-press-topdown-v2', SawyerButtonPressTopdownEnvV2),
+    # ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
+    ('peg-unplug-side-v2', SawyerPegUnplugSideEnv),
+    ('window-open-v2', SawyerWindowOpenEnvV2),
+    ('window-close-v2', SawyerWindowCloseEnvV2)),)
+
+
+EASY_MODE_ARGS_KWARGS_V4 = {
+    key: dict(args=[],
+              kwargs={
+                  'task_id': list(ALL_V2_ENVIRONMENTS.keys()).index(key)
+              })
+    for key, _ in EASY_MODE_CLS_DICT_V4.items()
+}
+EASY_MODE_ARGS_KWARGS_V4['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
 ############################################################################
 ############################################################################
 

@@ -44,7 +44,8 @@ Usage:
         <material name="kuka_orange" rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
         <material name="kuka_grey" rgba="0.4 0.4 0.4 1.0"/>
 
-	<mesh name="mug_mesh" file="objects/mug.stl"  scale="0.0006 0.0006 0.0006"/>
+	    <mesh name="mug_mesh" file="objects/mug.stl"  scale="0.0006 0.0006 0.0006"/>
+        
         <texture type="skybox" builtin="gradient" rgb1=".50 .495 .48" rgb2=".50 .495 .48" width="32" height="32"></texture>
         <texture file="marble.png" name="marble" />
         <texture file="navy_blue.png" name="navy_blue" />
@@ -60,29 +61,29 @@ Usage:
     </asset>
 
     <asset>
-    <texture name="wood" file="../textures/wood.png" type="cube"/>
-    <material shininess=".1" name="wood" texture="wood" specular="0.4"/>
+        <texture name="wood" file="../textures/wood.png" type="cube"/>
+        <material shininess=".1" name="wood" texture="wood" specular="0.4"/>
 
-    <texture name="real_door" file="../textures/real_door.png" type="cube"/>
-    <material shininess=".1" name="real_door" texture="real_door" specular=".4"/>
+        <texture name="real_door" file="../textures/real_door.png" type="cube"/>
+        <material shininess=".1" name="real_door" texture="real_door" specular=".4"/>
 
-    <texture name="darkwood" file="../textures/darkwood.png" type="cube"/>
-    <material shininess=".1" name="darkwood" texture="darkwood" specular="0.4"/>
+        <texture name="darkwood" file="../textures/darkwood.png" type="cube"/>
+        <material shininess=".1" name="darkwood" texture="darkwood" specular="0.4"/>
 
-    <texture name="granite" file="../textures/granite.png" type="2d"/>
-    <material shininess=".1" name="granite" texture="granite" specular="0.4"/>
+        <texture name="granite" file="../textures/granite.png" type="2d"/>
+        <material shininess=".1" name="granite" texture="granite" specular="0.4"/>
 
-    <texture name="light_wood" file="../textures/light_wood.png" type="cube"/>
-    <material shininess=".1" name="light_wood" texture="light_wood" specular="0.4"/>
+        <texture name="light_wood" file="../textures/light_wood.png" type="cube"/>
+        <material shininess=".1" name="light_wood" texture="light_wood" specular="0.4"/>
 
-    <texture name="light_wood_v2" file="../textures/light_wood_v2.png" type="cube"/>
-    <material shininess=".1" name="light_wood_v2" texture="light_wood_v2" specular="0.4"/>
+        <texture name="light_wood_v2" file="../textures/light_wood_v2.png" type="cube"/>
+        <material shininess=".1" name="light_wood_v2" texture="light_wood_v2" specular="0.4"/>
 
-    <texture name="light_wood_v3" file="../textures/light_wood_v3.png" type="2d"/>
-    <material shininess=".1" name="light_wood_v3" texture="light_wood_v3" specular="0.4"/>
+        <texture name="light_wood_v3" file="../textures/light_wood_v3.png" type="2d"/>
+        <material shininess=".1" name="light_wood_v3" texture="light_wood_v3" specular="0.4"/>
 
-    <texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
-  </asset>
+        <texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
+    </asset>
 
     <visual>
         <headlight ambient="0.5 0.5 0.5"  />
@@ -144,6 +145,12 @@ Usage:
         <motor ctrllimited="true" ctrlrange="-1 1"/>
         <position ctrllimited="true"/>
 
+        <default class="visual">
+            <geom contype="0" conaffinity="0"/>
+        </default>
+        <default class="collision">
+            <geom contype="1" conaffinity="1" friction=".6 0.005 0.0001"/>
+        </default>
        <!--  <default class='0'>
             <geom friction="1 0.005 0.001" rgba=".75 .6 .5 1"
                   contype="1" conaffinity="0"/>
