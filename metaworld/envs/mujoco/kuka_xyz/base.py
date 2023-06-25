@@ -155,7 +155,9 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
 
         self.data.set_mocap_pos('mocap', new_mocap_pos)
         # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
-        # self.data.set_mocap_quat('mocap', np.array([0, 1, 1, 0]))
+        #########################################
+        # reset orientation of kuka endeffector #
+        #########################################
         self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
 
     def discretize_goal_space(self, goals):

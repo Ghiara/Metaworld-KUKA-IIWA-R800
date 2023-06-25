@@ -3,6 +3,15 @@ from collections import OrderedDict
 # load kuka env for test
 from metaworld.envs.mujoco.kuka_xyz import (
     KukaReachEnvV2,
+    KukaPushEnvV2,
+    KukaPickPlaceEnvV2,
+    KukaDoorEnv,
+    KukaFaucetOpenEnvV2,
+    KukaDrawerCloseEnvV2,
+    KukaButtonPressTopdownEnvV2,
+    KukaPegUnplugSideEnv,
+    KukaWindowOpenEnvV2,
+    KukaWindowCloseEnvV2,
 )
 
 
@@ -289,16 +298,15 @@ EASY_MODE_ARGS_KWARGS_V3['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
 ################################################################
 EASY_MODE_CLS_DICT_V4 = OrderedDict((
     ('reach-v2', KukaReachEnvV2),
-    ('push-v2', SawyerPushEnvV2),
-    ('pick-place-v2', SawyerReachPushPickPlaceEnv), # change to v1
-    ('door-open-v2', SawyerDoorEnv), # v1
-    ('drawer-open-v2', SawyerDrawerOpenEnv), # v1
-    ('drawer-close-v2', SawyerDrawerCloseEnv), # v1
-    ('button-press-topdown-v2', SawyerButtonPressTopdownEnvV2),
-    # ('peg-insert-side-v2', SawyerPegInsertionSideEnvV2),
-    ('peg-unplug-side-v2', SawyerPegUnplugSideEnv),
-    ('window-open-v2', SawyerWindowOpenEnvV2),
-    ('window-close-v2', SawyerWindowCloseEnvV2)),)
+    ('push-v2', KukaPushEnvV2),
+    ('pick-place-v2', KukaPickPlaceEnvV2),
+    ('door-open-v2', KukaDoorEnv), # v1
+    ('faucet-open-v2', KukaFaucetOpenEnvV2),
+    ('drawer-close-v2', KukaDrawerCloseEnvV2),
+    ('button-press-topdown-v2', KukaButtonPressTopdownEnvV2),
+    ('peg-unplug-side-v2', KukaPegUnplugSideEnv),
+    ('window-open-v2', KukaWindowOpenEnvV2),
+    ('window-close-v2', KukaWindowCloseEnvV2)),)
 
 
 EASY_MODE_ARGS_KWARGS_V4 = {
@@ -308,7 +316,6 @@ EASY_MODE_ARGS_KWARGS_V4 = {
               })
     for key, _ in EASY_MODE_CLS_DICT_V4.items()
 }
-EASY_MODE_ARGS_KWARGS_V4['pick-place-v2']['kwargs']['task_type'] = 'pick_place'
 ############################################################################
 ############################################################################
 
