@@ -226,6 +226,7 @@ class MT10(Benchmark):
     '''
     def __init__(self):
         super().__init__()
+
         self._train_classes = _env_dict.EASY_MODE_CLS_DICT_V3
         self._test_classes = OrderedDict()
         train_kwargs = _env_dict.EASY_MODE_ARGS_KWARGS_V3

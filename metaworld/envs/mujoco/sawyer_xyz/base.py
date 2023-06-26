@@ -272,7 +272,8 @@ class SawyerXYZEnv(SawyerMocapBase, metaclass=abc.ABCMeta):
     ################ modified by Y.Meng ################
     ####################################################
     def viewer_setup(self):
-        body_id = self.sim.model.geom_name2id("tableTop")
+        # body_id = self.sim.model.geom_name2id("tableTop")
+        body_id = self.sim.model.geom_name2id("rightpad_geom")
         lookat = self.sim.data.geom_xpos[body_id]
         for idx, value in enumerate(lookat):
             self.viewer.cam.lookat[idx] = value

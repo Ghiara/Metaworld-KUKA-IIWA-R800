@@ -306,6 +306,7 @@ EASY_MODE_CLS_DICT_V4 = OrderedDict((
     ('button-press-topdown-v2', KukaButtonPressTopdownEnvV2),
     ('peg-unplug-side-v2', KukaPegUnplugSideEnv),
     ('window-open-v2', KukaWindowOpenEnvV2),
+    # ('window-open-v2', SawyerWindowOpenEnvV2),
     ('window-close-v2', KukaWindowCloseEnvV2)),)
 
 

@@ -12,6 +12,8 @@ try:
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
+# free moveable camera
+from metaworld.envs.mujoco.utils import engine
 
 def _assert_task_is_set(func):
     def inner(*args, **kwargs):

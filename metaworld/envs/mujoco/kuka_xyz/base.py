@@ -9,6 +9,8 @@ import numpy as np
 
 from metaworld.envs.mujoco.mujoco_env import MujocoEnv, _assert_task_is_set
 
+# set up moveable camera
+
 
 class KukaMocapBase(MujocoEnv, metaclass=abc.ABCMeta):
     """
@@ -284,6 +286,7 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
     ####################################################
     def viewer_setup(self):
         body_id = self.sim.model.geom_name2id("tableTop")
+        # body_id = self.sim.model.geom_name2id("floor")
         lookat = self.sim.data.geom_xpos[body_id]
         for idx, value in enumerate(lookat):
             self.viewer.cam.lookat[idx] = value
