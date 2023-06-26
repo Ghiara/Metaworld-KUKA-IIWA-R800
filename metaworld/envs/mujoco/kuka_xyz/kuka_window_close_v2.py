@@ -56,7 +56,7 @@ class KukaWindowCloseEnvV2(KukaXYZEnv):
 
     @property
     def model_name(self):
-        return get_asset_full_path('kuka_xyz/kuka_window_horizontal.xml', True)
+        return get_asset_full_path('kuka_xyz/kuka_window_horizontal.xml')
 
     @_assert_task_is_set
     def step(self, action):

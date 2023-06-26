@@ -7,7 +7,7 @@ from metaworld.envs.mujoco.kuka_xyz import (
     KukaPickPlaceEnvV2,
     KukaDoorEnv,
     KukaFaucetOpenEnvV2,
-    KukaDrawerCloseEnvV2,
+    KukaDrawerCloseEnv,
     KukaButtonPressTopdownEnvV2,
     KukaPegUnplugSideEnv,
     KukaWindowOpenEnvV2,
@@ -302,7 +302,7 @@ EASY_MODE_CLS_DICT_V4 = OrderedDict((
     ('pick-place-v2', KukaPickPlaceEnvV2),
     ('door-open-v2', KukaDoorEnv), # v1
     ('faucet-open-v2', KukaFaucetOpenEnvV2),
-    ('drawer-close-v2', KukaDrawerCloseEnvV2),
+    ('drawer-close-v2', KukaDrawerCloseEnv),
     ('button-press-topdown-v2', KukaButtonPressTopdownEnvV2),
     ('peg-unplug-side-v2', KukaPegUnplugSideEnv),
     ('window-open-v2', KukaWindowOpenEnvV2),

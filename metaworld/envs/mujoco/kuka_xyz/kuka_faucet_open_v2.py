@@ -41,7 +41,7 @@ class KukaFaucetOpenEnvV2(KukaXYZEnv):
 
     @property
     def model_name(self):
-        return get_asset_full_path('kuka_xyz/kuka_faucet.xml', True)
+        return get_asset_full_path('kuka_xyz/kuka_faucet.xml')
 
     @_assert_task_is_set
     def step(self, action):

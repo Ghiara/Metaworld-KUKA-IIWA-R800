@@ -5,13 +5,15 @@ from metaworld.envs.env_util import get_asset_full_path
 from metaworld.envs.mujoco.kuka_xyz.base import KukaXYZEnv, _assert_task_is_set
 
 
-class KukaDrawerCloseEnvV2(KukaXYZEnv):
+class KukaDrawerCloseEnv(KukaXYZEnv):
     def __init__(self):
 
         hand_low = (-0.5, 0.40, 0.05)
         hand_high = (0.5, 1, 0.5)
-        obj_low = (-0.1, 0.9, 0.0)
-        obj_high = (0.1, 0.9, 0.0)
+        obj_low = (-0.1, 0.9, 0.04)
+        obj_high = (0.1, 0.9, 0.04)
+        goal_low = (-0.1, 0.699, 0.04)
+        goal_high = (0.1, 0.701, 0.04)
 
         super().__init__(
             self.model_name,
@@ -21,15 +23,12 @@ class KukaDrawerCloseEnvV2(KukaXYZEnv):
 
         self.init_config = {
             'obj_init_angle': np.array([0.3, ], dtype=np.float32),
-            'obj_init_pos': np.array([0., 0.9, 0.0], dtype=np.float32),
+            'obj_init_pos': np.array([0., 0.9, 0.04], dtype=np.float32),
             'hand_init_pos': np.array([0, 0.6, 0.2], dtype=np.float32),
         }
         self.obj_init_pos = self.init_config['obj_init_pos']
         self.obj_init_angle = self.init_config['obj_init_angle']
         self.hand_init_pos = self.init_config['hand_init_pos']
-
-        goal_low = self.hand_low
-        goal_high = self.hand_high
 
         self.max_path_length = 150
 
@@ -39,12 +38,9 @@ class KukaDrawerCloseEnvV2(KukaXYZEnv):
         )
         self.goal_space = Box(np.array(goal_low), np.array(goal_high))
 
-        self.maxDist = 0.15
-        self.target_reward = 1000 * self.maxDist + 1000 * 2
-
     @property
     def model_name(self):
-        return get_asset_full_path('kuka_xyz/kuka_drawer.xml', True)
+        return get_asset_full_path('kuka_xyz/kuka_drawer.xml')
 
     @_assert_task_is_set
     def step(self, action):
@@ -55,19 +51,13 @@ class KukaDrawerCloseEnvV2(KukaXYZEnv):
         ob = self._get_obs()
         obs_dict = self._get_obs_dict()
         reward, reachDist, pullDist = self.compute_reward(action, obs_dict)
-        self.curr_path_length += 1
-        info = {
-            'reachDist': reachDist,
-            'goalDist': pullDist,
-            'epRew': reward,
-            'pickRew': None,
-            'success': float(pullDist <= 0.03),
-        }
+        self.curr_path_length +=1
+        info = {'reachDist': reachDist, 'goalDist': pullDist, 'epRew' : reward, 'pickRew':None, 'success': float(pullDist <= 0.06)}
 
         return ob, reward, False, info
 
     def _get_pos_objects(self):
-        return self.get_body_com('drawer_link') + np.array([.0, -.16, .05])
+        return self.data.get_geom_xpos('handle')
 
     def _set_goal_marker(self, goal):
         self.data.site_xpos[self.model.site_name2id('goal')] = (
@@ -82,29 +72,37 @@ class KukaDrawerCloseEnvV2(KukaXYZEnv):
 
     def reset_model(self):
         self._reset_hand()
+        self._state_goal = self.obj_init_pos - np.array([.0, .2, .0])
+        self.objHeight = self.data.get_geom_xpos('handle')[2]
 
-        # Compute nightstand position
-        self.obj_init_pos = self._get_state_rand_vec() if self.random_init \
-            else self.init_config['obj_init_pos']
-        # Set mujoco body to computed position
-        self.sim.model.body_pos[self.model.body_name2id(
-            'drawer'
-        )] = self.obj_init_pos
-        # Set _state_goal to current drawer position (closed)
-        self._state_goal = self.obj_init_pos + np.array([.0, -.16, .09])
+        if self.random_init:
+            obj_pos = self._get_state_rand_vec()
+            self.obj_init_pos = obj_pos
+            goal_pos = obj_pos.copy()
+            goal_pos[1] -= 0.2
+            self._state_goal = goal_pos
+
         self._set_goal_marker(self._state_goal)
-        # Pull drawer out all the way and mark its starting position
-        self._set_obj_xyz(-self.maxDist)
+        drawer_cover_pos = self.obj_init_pos.copy()
+        drawer_cover_pos[2] -= 0.02
+        self.sim.model.body_pos[self.model.body_name2id('drawer')] = self.obj_init_pos
+        self.sim.model.body_pos[self.model.body_name2id('drawer_cover')] = drawer_cover_pos
+        self.sim.model.site_pos[self.model.site_name2id('goal')] = self._state_goal
+        self._set_obj_xyz(-0.2)
+        self.maxDist = np.abs(self.data.get_geom_xpos('handle')[1] - self._state_goal[1])
+        self.target_reward = 1000*self.maxDist + 1000*2
 
         return self._get_obs()
 
     def _reset_hand(self):
-        for _ in range(50):
+        for _ in range(10):
             self.data.set_mocap_pos('mocap', self.hand_init_pos)
-            # reset kuka pose
             # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
+            # reset kuka hand pose
             self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
-            self.do_simulation([-1, 1], self.frame_skip)
+            self.do_simulation([-1,1], self.frame_skip)
+        rightFinger, leftFinger = self.get_site_pos('rightEndEffector'), self.get_site_pos('leftEndEffector')
+        self.init_fingerCOM  =  (rightFinger + leftFinger)/2
 
     def compute_reward(self, actions, obs):
         del actions
