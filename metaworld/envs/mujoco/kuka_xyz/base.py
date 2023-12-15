@@ -1,7 +1,6 @@
 import abc
 import copy
 import pickle
-
 from gym.spaces import Box
 from gym.spaces import Discrete
 import mujoco_py
@@ -17,8 +16,8 @@ class KukaMocapBase(MujocoEnv, metaclass=abc.ABCMeta):
     Provides some commonly-shared functions for Sawyer Mujoco envs that use
     mocap for XYZ control.
     """
-    mocap_low = np.array([-0.2, 0.5, 0.06])
-    mocap_high = np.array([0.2, 0.7, 0.6])
+    mocap_low = np.array([-0.5, 0.4, 0.01])
+    mocap_high = np.array([0.5, 0.85, 0.5])
 
     def __init__(self, model_name, frame_skip=5):
         MujocoEnv.__init__(self, model_name, frame_skip=frame_skip)
@@ -71,23 +70,23 @@ class KukaMocapBase(MujocoEnv, metaclass=abc.ABCMeta):
 
 class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
     _HAND_SPACE = Box(
-        np.array([-0.525, .35, -.0525]),
-        np.array([+0.525, 1.025, .525])
+        np.array([-0.525, .42, -.0525]),
+        np.array([+0.525, .85, .525])
     )
 
     def __init__(
             self,
             model_name,
             frame_skip=5,
-            hand_low=(-0.2, 0.55, 0.05),
-            hand_high=(0.2, 0.75, 0.3),
+            hand_low=(-0.5, 0.42, 0.01),
+            hand_high=(0.5, 0.85, 0.35),
             mocap_low=None,
             mocap_high=None,
             action_scale=1./100,
             action_rot_scale=1.,
     ):
         super().__init__(model_name, frame_skip=frame_skip)
-        self.random_init = True
+        self.random_init = True # force close the random vector
         self.action_scale = action_scale
         self.action_rot_scale = action_rot_scale
         self.hand_low = np.array(hand_low)
@@ -99,7 +98,9 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
         self.mocap_low = np.hstack(mocap_low)
         self.mocap_high = np.hstack(mocap_high)
         self.curr_path_length = 0
-        self._freeze_rand_vec = True
+        ##########################################################################
+        self._freeze_rand_vec = True # positions are not random reset
+        ##########################################################################
         self._last_rand_vec = None
 
         # We use continuous goal space by default and
@@ -154,13 +155,16 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
             self.mocap_low,
             self.mocap_high,
         )
-
         self.data.set_mocap_pos('mocap', new_mocap_pos)
+        # self.data.set_mocap_pos('mocap', np.array(0.295, 0.645, 0.14))
         # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
         #########################################
         # reset orientation of kuka endeffector #
         #########################################
-        self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+        # version 1 
+        # self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+        # version 2 2f85 gripper
+        self.data.set_mocap_quat('mocap', np.array([0, -1, 1, 0]))
 
     def discretize_goal_space(self, goals):
         assert False
@@ -293,3 +297,23 @@ class KukaXYZEnv(KukaMocapBase, metaclass=abc.ABCMeta):
         self.viewer.cam.distance = 2.0
         self.viewer.cam.azimuth = 140.0
         self.viewer.cam.elevation = -40.0
+    
+    def rescale_gripper_action(self, action:float):
+        '''
+        Function used for rescaling the action control of Robotiq 2F85 
+        action from Gym + NN Agent [-1, 1] --> action for Robotiq Gripper [0, 255] (with 0: full open, 255: close)
+        Input: 
+            action: if action > 1.0, return action itself
+                    if -1.0 <= action <= 1.0, mapping to gripper open movement (with max open 0.08 m)
+        Output:
+            gripper_action: action that used for 2F85 gripper
+        '''
+        gripper_action = 0
+
+        if action > 1.0:
+            gripper_action = action
+        else:
+            action = np.floor(action/0.4)*0.4+0.5 # restrict the movement threshold
+            gripper_action = np.ceil(128 - 127.5*action)
+            gripper_action = np.clip(gripper_action, 0, 255) # value limited in [0, 255]
+        return gripper_action

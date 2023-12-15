@@ -21,10 +21,10 @@ class KukaReachEnvV2(KukaXYZEnv):
     def __init__(self):
         lift_thresh = 0.04
 
-        goal_low = (-0.1, 0.8, 0.05)
-        goal_high = (0.1, 0.9, 0.3)
-        hand_low = (-0.5, 0.40, 0.05)
-        hand_high = (0.5, 1, 0.5)
+        goal_low = (-0.1, 0.7, 0.05)
+        goal_high = (0.1, 0.8, 0.3)
+        hand_low = (-0.5, 0.40, 0.01)
+        hand_high = (0.5, 0.85, 0.5)
         obj_low = (-0.1, 0.6, 0.02)
         obj_high = (0.1, 0.7, 0.02)
 
@@ -37,7 +37,7 @@ class KukaReachEnvV2(KukaXYZEnv):
         self.init_config = {
             'obj_init_angle': .3,
             'obj_init_pos': np.array([0., 0.6, 0.02]),
-            'hand_init_pos': np.array([0., 0.6, 0.2]),
+            'hand_init_pos': np.array([0., 0.5, 0.2]),
         }
 
         self.goal = np.array([-0.1, 0.8, 0.2])
@@ -47,7 +47,7 @@ class KukaReachEnvV2(KukaXYZEnv):
         self.hand_init_pos = self.init_config['hand_init_pos']
 
         self.liftThresh = lift_thresh
-        self.max_path_length = 150
+        self.max_path_length = 200
 
         self._random_reset_space = Box(
             np.hstack((obj_low, goal_low)),
@@ -65,7 +65,12 @@ class KukaReachEnvV2(KukaXYZEnv):
     @_assert_task_is_set
     def step(self, action):
         self.set_xyz_action(action[:3])
-        self.do_simulation([action[-1], -action[-1]])
+        # self.do_simulation([action[-1], -action[-1]])
+        ##########################################################################
+        # TODO: for Robotiq action must be rescaled between [-1, 1] --> [0, 255] #
+        ##########################################################################
+        gripper_action = self.rescale_gripper_action(action[-1])
+        self.do_simulation(gripper_action)
         # The marker seems to get reset every time you do a simulation
         self._set_goal_marker(self._state_goal)
 
@@ -144,8 +149,9 @@ class KukaReachEnvV2(KukaXYZEnv):
             self.data.set_mocap_pos('mocap', self.hand_init_pos)
             # fit this to kuka model
             # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
-            self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
-            self.do_simulation([-1, 1], self.frame_skip)
+            # self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+            self.data.set_mocap_quat('mocap', np.array([0, -1, 1, 0]))
+            self.do_simulation(255, self.frame_skip)
 
         finger_right, finger_left = (
             self.get_site_pos('rightEndEffector'),

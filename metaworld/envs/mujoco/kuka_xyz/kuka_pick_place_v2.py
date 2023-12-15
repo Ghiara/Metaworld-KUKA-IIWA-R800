@@ -21,12 +21,15 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
     def __init__(self):
         liftThresh = 0.04
 
-        goal_low = (-0.1, 0.8, 0.05)
-        goal_high = (0.1, 0.9, 0.3)
-        hand_low = (-0.5, 0.40, 0.05)
-        hand_high = (0.5, 1, 0.5)
-        obj_low = (-0.1, 0.6, 0.02)
-        obj_high = (0.1, 0.7, 0.02)
+        # goal_low = (-0.1, 0.75, 0.01) # origin 0.8
+        # goal_high = (0.1, 0.82, 0.35) # origin 0.9
+        goal_low = (-0.3, 0.6, 0.23)
+        goal_high = (-0.29, 0.6, 0.23)
+        hand_low = (-0.5, 0.4, 0.0)
+        hand_high = (0.5, 0.85, 0.5) # origin 1
+        obj_low = (0.05, 0.595, 0.015) # origin 0.6
+        obj_high = (0.05, 0.6, 0.015) # origin 0.7
+
 
         super().__init__(
             self.model_name,
@@ -36,8 +39,8 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
 
         self.init_config = {
             'obj_init_angle': .3,
-            'obj_init_pos': np.array([0, 0.6, 0.02]),
-            'hand_init_pos': np.array([0, .6, .2]),
+            'obj_init_pos': np.array([0, 0.6, 0.015]),
+            'hand_init_pos': np.array([0, .5, .2]),
         }
 
         self.goal = np.array([0.1, 0.8, 0.2])
@@ -47,7 +50,7 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
         self.hand_init_pos = self.init_config['hand_init_pos']
 
         self.liftThresh = liftThresh
-        self.max_path_length = 150
+        self.max_path_length = 200
 
         self._random_reset_space = Box(
             np.hstack((obj_low, goal_low)),
@@ -59,12 +62,18 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
 
     @property
     def model_name(self):
-        return get_asset_full_path('kuka_xyz/kuka_pick_place_v2.xml')
+        # return get_asset_full_path('kuka_xyz/kuka_pick_place_v2.xml')
+        return get_asset_full_path('kuka_xyz/kuka_sequence.xml')
 
     @_assert_task_is_set
     def step(self, action):
         self.set_xyz_action(action[:3])
-        self.do_simulation([action[-1], -action[-1]])
+        # self.do_simulation([action[-1], -action[-1]])
+        ##########################################################################
+        # TODO: for Robotiq action must be rescaled between [-1, 1] --> [0, 255] #
+        ##########################################################################
+        gripper_action = self.rescale_gripper_action(action[-1])
+        self.do_simulation(gripper_action)
         # The marker seems to get reset every time you do a simulation
         self._set_goal_marker(self._state_goal)
 
@@ -90,13 +99,16 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
         return self.get_body_com('obj')
 
     def _set_goal_marker(self, goal):
-        self.data.site_xpos[self.model.site_name2id('goal')] = goal[:3]
+        self.data.site_xpos[self.model.site_name2id('goal_obj')] = goal[:3]
 
     def _set_obj_xyz(self, pos):
         qpos = self.data.qpos.flat.copy()
         qvel = self.data.qvel.flat.copy()
-        qpos[9:12] = pos.copy()
-        qvel[9:15] = 0
+        # qpos[9:12] = pos.copy()
+        # qvel[12:15] = 0
+        qpos[18:21] = pos.copy()
+        qvel[-3:] = 0
+        qpos[15] = -0.18 # sequence task: set drawer position as opened mode
         self.set_state(qpos, qvel)
 
     def fix_extreme_obj_pos(self, orig_init_pos):
@@ -148,8 +160,9 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
             self.data.set_mocap_pos('mocap', self.hand_init_pos)
             # reset orientation to fit kuka robot
             # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
-            self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
-            self.do_simulation([-1, 1], self.frame_skip)
+            # self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+            self.data.set_mocap_quat('mocap', np.array([0, -1, 1, 0]))
+            self.do_simulation(255, self.frame_skip)
 
         finger_right, finger_left = (
             self.get_site_pos('rightEndEffector'),
@@ -170,7 +183,7 @@ class KukaPickPlaceEnvV2(KukaXYZEnv):
         heightTarget = self.heightTarget
 
         goal = self._state_goal
-        assert np.all(goal == self.get_site_pos('goal'))
+        assert np.all(goal == self.get_site_pos('goal_obj'))
 
         tolerance = 0.01
         self.pick_completed = pos_obj[2] >= (heightTarget - tolerance)

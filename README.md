@@ -2,19 +2,38 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rlworkgroup/metaworld/blob/master/LICENSE)
 [![Build Status](https://travis-ci.com/rlworkgroup/metaworld.svg?branch=master)](https://travis-ci.com/rlworkgroup/metaworld)
 
+## Modification
+1. More beautiful basic scene.
+2. The gripper is replaced with [Robotiq-2F85](https://github.com/google-deepmind/mujoco_menagerie/blob/main/robotiq_2f85/README.md)
+3. Support of long sequence tasks (with subgoals and targeted objects) in a single environment scenario.
+4. To call the environments, use:
+```
+import metaworld
+mt10_kuka = metaworld.MT10_KUKA()
+```
+<p align="center">
+<img src="kuka-snapshot.png" width="400">
+</p>
+
+
+
+
 __Meta-World is an open-source simulated benchmark for meta-reinforcement learning and multi-task learning consisting of 50 distinct robotic manipulation tasks.__ We aim to provide task distributions that are sufficiently broad to evaluate meta-RL algorithms' generalization ability to new behaviors.
 
 For more background information, please refer to our [website](https://meta-world.github.io) and the accompanying [conference publication](https://arxiv.org/abs/1910.10897), which **provides baseline results for 8 state-of-the-art meta- and multi-task RL algorithms**.
 
 __Table of Contents__
-- [Installation](#installation)
-- [Using the benchmark](#using-the-benchmark)
-  * [Basics](#basics)
-  * [Running ML1, MT1](#running-ml1-or-mt1)
-  * [Running ML10, ML45, MT10, MT50](#running-a-benchmark)
-- [Citing Meta-World](#citing-meta-world)
-- [Become a Contributor](#become-a-contributor)
-- [Acknowledgements](#acknowledgements)
+- [Meta-World](#meta-world)
+  - [Modification](#modification)
+  - [Join the Community](#join-the-community)
+  - [Installation](#installation)
+  - [Using the benchmark](#using-the-benchmark)
+    - [Basics](#basics)
+    - [Running ML1 or MT1](#running-ml1-or-mt1)
+    - [Running a benchmark](#running-a-benchmark)
+  - [Citing Meta-World](#citing-meta-world)
+  - [Become a Contributor](#become-a-contributor)
+  - [Acknowledgements](#acknowledgements)
 
 ## Join the Community
 **Join our mailing list: [metaworld-announce@googlegroups.com](https://groups.google.com/forum/#!forum/metaworld-announce/join)** for infrequent announcements about the status of the benchmark, critical bugs and known issues before conference deadlines, and future plans, please 
@@ -144,3 +163,4 @@ We welcome all contributions to Meta-World. Please refer to the [contributor's g
 Meta-World is a work by [Tianhe Yu (Stanford University)](https://cs.stanford.edu/~tianheyu/), [Deirdre Quillen (UC Berkeley)](https://scholar.google.com/citations?user=eDQsOFMAAAAJ&hl=en), [Zhanpeng He (Columbia University)](https://zhanpenghe.github.io), [Ryan Julian (University of Southern California)](https://ryanjulian.me), [Karol Hausman (Google AI)](https://karolhausman.github.io),  [Chelsea Finn (Stanford University)](https://ai.stanford.edu/~cbfinn/) and [Sergey Levine (UC Berkeley)](https://people.eecs.berkeley.edu/~svlevine/).
 
 The code for Meta-World was originally based on [multiworld](https://github.com/vitchyr/multiworld), which is developed by [Vitchyr H. Pong](https://people.eecs.berkeley.edu/~vitchyr/), [Murtaza Dalal](https://github.com/mdalal2020), [Ashvin Nair](http://ashvin.me/), [Shikhar Bahl](https://shikharbahl.github.io), [Steven Lin](https://github.com/stevenlin1111), [Soroush Nasiriany](http://snasiriany.me/), [Kristian Hartikainen](https://hartikainen.github.io/) and [Coline Devin](https://github.com/cdevin). The Meta-World authors are grateful for their efforts on providing such a great framework as a foundation of our work. We also would like to thank Russell Mendonca for his work on reward functions for some of the environments.
+

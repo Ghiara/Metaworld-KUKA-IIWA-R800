@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco>
-    <include file="kuka_shared_config.xml"></include>
+    <include file="../scene/basic_scene.xml"/>
+    <include file="kuka_shared_config_v2.xml"></include>
 
     <worldbody>
         <!-- sawyer_xyz_base -->
-        <include file="kuka_xyz_base.xml"></include>
+        <include file="kuka_xyz_base_v2.xml"></include>
         <!-- <include file="sawyer_xyz_base.xml"></include> -->
         <body name="obj" pos="0 0.6 0.02">
 
@@ -18,14 +19,18 @@
         </body>
 
         <site name="goal" pos="-0.1 0.8 0.2" size="0.02"
-              rgba="0.8 0 0 1"/>
+              rgba="0 0.8 0 1"/>
 
 
     </worldbody>
 
-    <actuator>
+    <!-- <actuator>
         <position ctrllimited="true" ctrlrange="-1 1" joint="r_close" kp="400"  user="1"/>
         <position ctrllimited="true" ctrlrange="-1 1" joint="l_close" kp="400"  user="1"/>
-    </actuator>
+    </actuator> -->
+
+    <equality>
+        <weld body1="mocap" body2="hand" solref="0.02 1"></weld>
+    </equality>
 
 </mujoco>

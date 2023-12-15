@@ -8,10 +8,10 @@ from metaworld.envs.mujoco.kuka_xyz.base import KukaXYZEnv, _assert_task_is_set
 class KukaDoorEnv(KukaXYZEnv):
     def __init__(self):
 
-        hand_low = (-0.5, 0.40, 0.05)
-        hand_high = (0.5, 1, 0.5)
-        obj_low = (0., 0.85, 0.1)
-        obj_high = (0.1, 0.95, 0.1)
+        hand_low = (-0.5, 0.40, 0.01)
+        hand_high = (0.5, 0.85, 0.5)
+        obj_low = (0., 0.7, 0.1)
+        obj_high = (0.1, 0.8, 0.1)
 
         super().__init__(
             self.model_name,
@@ -21,11 +21,11 @@ class KukaDoorEnv(KukaXYZEnv):
 
         self.init_config = {
             'obj_init_angle': np.array([0.3, ]),
-            'obj_init_pos': np.array([0.1, 0.95, 0.1]),
-            'hand_init_pos': np.array([0, 0.6, 0.2]),
+            'obj_init_pos': np.array([0.1, 0.75, 0.1]), # origin 0.95
+            'hand_init_pos': np.array([0, 0.5, 0.2]),
         }
 
-        self.goal = np.array([-0.2, 0.7, 0.15])
+        self.goal = np.array([-0.2, 0.55, 0.15]) # origin 0.7
         self.obj_init_pos = self.init_config['obj_init_pos']
         self.obj_init_angle = self.init_config['obj_init_angle']
         self.hand_init_pos = self.init_config['hand_init_pos']
@@ -33,7 +33,7 @@ class KukaDoorEnv(KukaXYZEnv):
         goal_low = self.hand_low
         goal_high = self.hand_high
 
-        self.max_path_length = 150
+        self.max_path_length = 200
 
         self._random_reset_space = Box(
             np.array(obj_low),
@@ -50,7 +50,12 @@ class KukaDoorEnv(KukaXYZEnv):
     @_assert_task_is_set
     def step(self, action):
         self.set_xyz_action(action[:3])
-        self.do_simulation([action[-1], -action[-1]])
+        # self.do_simulation([action[-1], -action[-1]])
+        ##########################################################################
+        # TODO: for Robotiq action must be rescaled between [-1, 1] --> [0, 255] #
+        ##########################################################################
+        gripper_action = self.rescale_gripper_action(action[-1])
+        self.do_simulation(gripper_action)
         # The marker seems to get reset every time you do a simulation
         self._set_goal_marker(self._state_goal)
         ob = self._get_obs()
@@ -96,12 +101,13 @@ class KukaDoorEnv(KukaXYZEnv):
         return self._get_obs()
 
     def _reset_hand(self):
-        for _ in range(10):
+        for _ in range(50):
             self.data.set_mocap_pos('mocap', self.hand_init_pos)
             # reset kuka pose
             # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
-            self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
-            self.do_simulation([-1,1], self.frame_skip)
+            # self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+            self.data.set_mocap_quat('mocap', np.array([0, -1, 1, 0]))
+            self.do_simulation(255, self.frame_skip)
 
         rightFinger, leftFinger = self.get_site_pos('rightEndEffector'), self.get_site_pos('leftEndEffector')
         self.init_fingerCOM  =  (rightFinger + leftFinger)/2

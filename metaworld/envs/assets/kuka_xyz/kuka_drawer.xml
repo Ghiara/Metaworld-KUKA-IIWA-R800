@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mujoco>
-    <include file="kuka_shared_config.xml"></include>
+    <include file="../scene/basic_scene.xml"/>
+    <include file="kuka_shared_config_v2.xml"></include>
     <worldbody>
-        <include file="kuka_xyz_base.xml"></include>
+        <include file="kuka_xyz_base_v2.xml"></include>
 
-        <body name="drawer" pos="0. 0.9 0.04">
+        <body name="drawer" pos="0. 0.9 0.04" euler="0 0 1.570796">
           <geom rgba="1 0.3 0.3 1" type="box" contype="1" size="0.1 0.1 0.001" name="drawer_bottom" conaffinity="1" pos="0 0 0.005" mass="1000" material="light_wood_v2" />
           <geom rgba="1 0.3 0.3 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.1 0.001 0.05" name="drawer_wall1" conaffinity="1" pos="0.0 0.1 0.054" mass="1000" solref="0.01 1" material="light_wood_v2"/>
           <geom rgba="1 0.3 0.3 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.1 0.001 0.05" name="drawer_wall2" conaffinity="1" pos="0.0 -0.1 0.054" mass="1000" solref="0.01 1" material="light_wood_v2"/>
@@ -20,13 +21,13 @@
           <geom rgba="1 0.3 0.3 1" type="capsule" fromto="0.098 -0.098 0.0075 0.098 -0.098 0.06" contype="1" size="0.005" conaffinity="1"/>
           <geom rgba="1 0.3 0.3 1" type="capsule" fromto="-0.098 0.098 0.0075 -0.098 0.098 0.06" contype="1" size="0.005" conaffinity="1"/>
           <geom rgba="1 0.3 0.3 1" type="capsule" fromto="-0.098 -0.098 0.0075 -0.098 -0.098 0.06" contype="1" size="0.005" conaffinity="1"/> -->
-          <joint type="slide" range="-0.2 0" axis="0 1 0" name="goal_slidey" pos="0 0 0" damping="1.0"/>
+          <joint type="slide" range="-0.2 0" axis="0 1 0" name="goal_slidey" pos="0 0 0" damping="1.0" frictionloss="0.1"/>
           <!-- <site name="handleStart" pos="0 -0.17 0.08" size="0.01" rgba="1 0 0 1"/> -->
           <site name="handleStart" pos="0 -0.2 0.08" size="0.01" rgba="1 0 0 1"/>
           <!-- <joint type="slide" range="0. 0.00000001" axis="1 0 0" name="goal_slidex" pos="0 0 0" damping="1.0"/>
           <joint type="slide" range="0. 0.00000001" axis="0 0 1" name="goal_slidez" pos="0 0 0" damping="1.0"/> -->
         </body>
-        <body name="drawer_cover" pos="0. 0.9 0.02">
+        <body name="drawer_cover" pos="0. 0.9 0.02" euler="0 0 1.570796">
           <geom rgba="0.3 0.3 1 1" type="box" contype="1" size="0.105 0.105 0.001" name="cover_top" conaffinity="1" pos="0 0 0.2" mass="1000" material="light_wood_v2"/>
           <!-- <geom rgba="0.3 0.3 1 1" type="box" contype="1" size="0.12 0.12 0.001" name="cover_bottom" conaffinity="1" pos="0 0 0.005" mass="1000"/> -->
           <geom rgba="0.3 0.3 1 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.105 0.001 0.1" name="cover_wall1" conaffinity="1" pos="0.0 0.105 0.102" mass="1000" solref="0.01 1" material="light_wood_v2"/>
@@ -39,13 +40,16 @@
           <geom rgba="0.3 0.3 1 1" type="capsule" fromto="-0.103 -0.103 0.0075 -0.103 -0.103 0.2" contype="2" size="0.005" conaffinity="2" material="light_wood_v2"/>
           <!-- <joint type="slide" range="-0.2 0." axis="0 1 0" name="goal_slidey" pos="0 0 0" damping="1.0"/> -->
         </body>
-        <site name="goal" pos="0. 0.7 0.05" size="0.02" 
+        <site name="goal" pos="0. 0.7 0.05" euler="0 0 1.570796" size="0.02" 
               rgba="0 0.8 0 1"/>
     </worldbody>
 
-    <actuator>
+    <!-- <actuator>
         <position ctrllimited="true" ctrlrange="-1 1" joint="r_close" kp="400"  user="1"/>
         <position ctrllimited="true" ctrlrange="-1 1" joint="l_close" kp="400"  user="1"/>
-    </actuator>
+    </actuator> -->
+    <equality>
+        <weld body1="mocap" body2="hand" solref="0.02 1"></weld>
+    </equality>
 
 </mujoco>

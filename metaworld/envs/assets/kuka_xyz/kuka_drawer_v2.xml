@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mujoco>
+    <include file="../scene/basic_scene.xml"/>
+    <include file="kuka_shared_config_v2.xml"></include>
+    <worldbody>
+        <include file="kuka_xyz_base_v2.xml"></include>
+        
+        <body name="drawer" pos="-0.5 0.63 0.001" euler="0 0 1.570796">
+          <inertial pos="0 0 0" mass="10" diaginertia="8e-04 8e-04 8e-04"/>
+          <geom rgba="1 1 1 1" type="box" contype="1" size="0.185 0.13 0.001" name="drawer_bottom" conaffinity="1" pos="0 0 0.005" mass="1000"/>
+          <geom rgba="1 1 0.9 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.185 0.001 0.06" name="drawer_wall1" conaffinity="1" pos="0.0 0.13 0.064" mass="1000" solref="0.01 1" />
+          <geom rgba="1 1 0.9 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.185 0.001 0.06" name="drawer_wall2" conaffinity="1" pos="0.0 -0.13 0.064" mass="1000" solref="0.01 1" />
+          <geom rgba="1 1 0.9 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.001 0.13 0.06" name="drawer_wall3" conaffinity="1" pos="0.185 0 0.064" mass="1000" solref="0.01 1" />
+          <geom rgba="1 1 0.9 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.001 0.13 0.06" name="drawer_wall4" conaffinity="1" pos="-0.185 0 0.064" mass="1000" solref="0.01 1"/>
+          <!--front, parallel to door-->
+          <geom type="box" pos="0 -0.27 0.052" size="0.12 0.01 0.015" rgba="0 0 0 1" contype="1" conaffinity="1" name="handle" material="light_wood_v2"/>
+          <!--front-->
+          <geom type="box" pos="0.11 -0.205 0.052" size="0.01 0.075 0.015" rgba="0 0 0 1" contype="1" conaffinity="1" material="light_wood_v2"/>
+          <!--front-->
+          <geom type="box" pos="-0.11 -0.205 0.052" size="0.01 0.075 0.015" rgba="0 0 0 1" contype="1" conaffinity="1" material="light_wood_v2"/>
+          <joint type="slide" range="-0.2 0" axis="0 1 0" name="goal_slidey" pos="0 0 0" damping="1.0" frictionloss="0.1"/>
+          <site name="handleStart" pos="0 -0.27 0.07" size="0.01" rgba="1 0 0 1"/>
+          <!-- <joint type="slide" range="0. 0.00000001" axis="1 0 0" name="goal_slidex" pos="0 0 0" damping="1.0"/>
+          <joint type="slide" range="0. 0.00000001" axis="0 0 1" name="goal_slidez" pos="0 0 0" damping="1.0"/> -->
+        </body>
+        <body name="drawer_cover" pos="-0.5 0.63 0.0" euler="0 0 1.570796">
+          <geom rgba="0.8 0.8 1 1" type="box" contype="1" size="0.19 0.135 0.001" name="cover_top" conaffinity="1" pos="0 0 0.175" mass="1000" material="light_wood_v2"/>
+          <!-- <geom rgba="0.3 0.3 1 1" type="box" contype="1" size="0.12 0.12 0.001" name="cover_bottom" conaffinity="1" pos="0 0 0.005" mass="1000"/> -->
+          <geom rgba="0.8 0.8 1 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.19 0.001 0.0875" name="cover_wall1" conaffinity="1" pos="0.0 0.135 0.0895" mass="1000" solref="0.01 1" material="light_wood_v2"/>
+          <!-- <geom rgba="0.3 0.3 1 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.1 0.001 0.03" name="cover_wall2" conaffinity="1" pos="0.0 -0.1 0.034" mass="1000" solref="0.01 1"/> -->
+          <geom rgba="0.8 0.8 1 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.001 0.135 0.0875" name="cover_wall3" conaffinity="1" pos="0.19 0 0.0895" mass="1000" solref="0.01 1" material="light_wood_v2"/>
+          <geom rgba="0.8 0.8 1 1" type="box" solimp="0.99 0.99 0.01" contype="1" size="0.001 0.135 0.0875" name="cover_wall4" conaffinity="1" pos="-0.19 0 0.0895" mass="1000" solref="0.01 1" material="light_wood_v2"/>
+          <geom rgba="0.8 0.8 1 1" type="capsule" fromto="0.193 0.133 0.0075 0.193 0.133 0.175" contype="2" size="0.003" conaffinity="2" material="light_wood_v2"/>
+          <geom rgba="0.8 0.8 1 1" type="capsule" fromto="0.193 -0.133 0.0075 0.193 -0.133 0.175" contype="2" size="0.003" conaffinity="2" material="light_wood_v2"/>
+          <geom rgba="0.8 0.8 1 1" type="capsule" fromto="-0.193 0.133 0.0075 -0.193 0.133 0.175" contype="2" size="0.003" conaffinity="2" material="light_wood_v2"/>
+          <geom rgba="0.8 0.8 1 1" type="capsule" fromto="-0.193 -0.133 0.0075 -0.193 -0.133 0.175" contype="2" size="0.003" conaffinity="2" material="light_wood_v2"/>
+          <!-- <joint type="slide" range="-0.2 0." axis="0 1 0" name="goal_slidey" pos="0 0 0" damping="1.0"/> -->
+        </body>
+        <site name="goal_drawer" pos="0. 0.7 0.05" euler="0 0 1.570796" size="0.02" rgba="0 0.8 0 1"/>
+    </worldbody>
+
+    <!-- <actuator>
+        <position ctrllimited="true" ctrlrange="-1 1" joint="r_close" kp="400"  user="1"/>
+        <position ctrllimited="true" ctrlrange="-1 1" joint="l_close" kp="400"  user="1"/>
+    </actuator> -->
+    <equality>
+        <weld body1="mocap" body2="hand" solref="0.02 1"></weld>
+    </equality>
+
+</mujoco>

@@ -37,7 +37,7 @@ class MujocoEnv(gym.Env, abc.ABC):
      - Do not automatically set the observation/action space.
     """
 
-    max_path_length = 150
+    max_path_length = 200
 
     def __init__(self, model_path, frame_skip):
         if not path.exists(model_path):
@@ -118,6 +118,9 @@ class MujocoEnv(gym.Env, abc.ABC):
             data = self._get_viewer(mode).read_pixels(width, height, depth=False)
             # original image is upside-down, so flip it
             return data[::-1, :, :]
+        elif mode == "server":
+            img = self.sim.render(width, height)
+            return img
 
     def close(self):
         if self.viewer is not None:

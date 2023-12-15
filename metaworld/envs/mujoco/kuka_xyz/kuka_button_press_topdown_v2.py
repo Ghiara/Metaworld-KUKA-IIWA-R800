@@ -9,10 +9,11 @@ class KukaButtonPressTopdownEnvV2(KukaXYZEnv):
 
     def __init__(self):
 
-        hand_low = (-0.5, 0.40, 0.05)
-        hand_high = (0.5, 1, 0.5)
-        obj_low = (-0.1, 0.8, 0.115)
-        obj_high = (0.1, 0.9, 0.115)
+        hand_low = (-0.5, 0.40, 0.01)
+        hand_high = (0.5, 0.85, 0.5)
+        obj_low = (0.29, 0.64, 0.115) 
+        obj_high = (0.3, 0.65, 0.115) 
+
 
         super().__init__(
             self.model_name,
@@ -21,17 +22,17 @@ class KukaButtonPressTopdownEnvV2(KukaXYZEnv):
         )
 
         self.init_config = {
-            'obj_init_pos': np.array([0, 0.8, 0.115], dtype=np.float32),
-            'hand_init_pos': np.array([0, 0.4, 0.2], dtype=np.float32),
+            'obj_init_pos': np.array([0.29, 0.64, 0.115], dtype=np.float32),
+            'hand_init_pos': np.array([0, 0.5, 0.2], dtype=np.float32),
         }
-        self.goal = np.array([0, 0.88, 0.1])
+        self.goal = np.array([0, 0.75, 0.1]) # state goal pos = hole
         self.obj_init_pos = self.init_config['obj_init_pos']
         self.hand_init_pos = self.init_config['hand_init_pos']
 
         goal_low = self.hand_low
         goal_high = self.hand_high
 
-        self.max_path_length = 150
+        self.max_path_length = 200
 
         self._random_reset_space = Box(
             np.array(obj_low),
@@ -42,23 +43,30 @@ class KukaButtonPressTopdownEnvV2(KukaXYZEnv):
     @property
     def model_name(self):
         return get_asset_full_path('kuka_xyz/kuka_button_press_topdown.xml')
+        # return get_asset_full_path('kuka_xyz/kuka_sequence.xml')
 
     @_assert_task_is_set
     def step(self, action):
         self.set_xyz_action(action[:3])
-        self.do_simulation([action[-1], -action[-1]])
+        # self.do_simulation([action[-1], -action[-1]])
+        ##########################################################################
+        # TODO: for Robotiq action must be rescaled between [-1, 1] --> [0, 255] #
+        ##########################################################################
+        gripper_action = self.rescale_gripper_action(action[-1])
+        self.do_simulation(gripper_action)
         # The marker seems to get reset every time you do a simulation
         ob = self._get_obs()
         obs_dict = self._get_obs_dict()
         reward, reachDist, pressDist = self.compute_reward(action, obs_dict)
         self.curr_path_length +=1
-        info = {'reachDist': reachDist, 'goalDist': pressDist, 'epRew': reward, 'pickRew':None, 'success': float(pressDist <= 0.02)}
+        info = {'reachDist': reachDist, 'goalDist': pressDist, 
+                'epRew': reward, 'pickRew':None, 'success': float(pressDist <= 0.02)}
         info['goal'] = self.goal
 
         return ob, reward, False, info
 
     def _get_pos_objects(self):
-        return self.get_body_com("button") + np.array([.0, .0, .193])
+        return self.get_body_com("button")+np.array([0.0, 0.0, 0.193])
 
     def _set_obj_xyz(self, pos):
         qpos = self.data.qpos.flat.copy()
@@ -79,7 +87,8 @@ class KukaButtonPressTopdownEnvV2(KukaXYZEnv):
         self._state_goal = self.get_site_pos('hole')
         self.maxDist = np.abs(self.data.site_xpos[self.model.site_name2id('buttonStart')][2] - self._state_goal[2])
         self.target_reward = 1000*self.maxDist + 1000*2
-
+        # print('button: ', self.get_body_com('button'))
+        # print('buttonStart: ', self.get_site_pos('buttonStart'))
         return self._get_obs()
 
     def _reset_hand(self):
@@ -87,8 +96,9 @@ class KukaButtonPressTopdownEnvV2(KukaXYZEnv):
             self.data.set_mocap_pos('mocap', self.hand_init_pos)
             # reset pose
             # self.data.set_mocap_quat('mocap', np.array([1, 0, 1, 0]))
-            self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
-            self.do_simulation([-1,1], self.frame_skip)
+            # self.data.set_mocap_quat('mocap', np.array([0, 1, 0, 0]))
+            self.data.set_mocap_quat('mocap', np.array([0, -1, 1, 0]))
+            self.do_simulation(255, self.frame_skip)
 
         rightFinger, leftFinger = self.get_site_pos('rightEndEffector'), self.get_site_pos('leftEndEffector')
         self.init_fingerCOM  =  (rightFinger + leftFinger)/2

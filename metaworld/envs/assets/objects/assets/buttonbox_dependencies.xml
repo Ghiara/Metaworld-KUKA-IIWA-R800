@@ -3,7 +3,7 @@
     <asset>
       <texture name="T_btn" type="cube" file="../textures/metal1.png"/>
 
-      <material name="btn_col" rgba="0.3 0.3 1.0 0.5" shininess="0" specular="0"/>
+      <material name="btn_col" rgba="0.3 0.3 1.0 1" shininess="1" specular=".5" reflectance=".7"/>
       <material name="btn_red" rgba=".6 0 0 1" shininess="1" reflectance=".7" specular=".5"/>
       <material name="btn_yellow" rgba=".7 .5 0 1" shininess="1" reflectance=".7" specular=".5"/>
       <material name="btn_black" rgba=".15 .15 .15 1" shininess="1" reflectance=".7" specular=".5"/>
@@ -26,11 +26,13 @@
     </default>
 
     <asset>
-        <mesh file="../objects/meshes/buttonbox/stopbot.stl" name="stopbot"/>
+        <!-- <mesh file="../objects/meshes/buttonbox/stopbot.stl" name="stopbot"/> -->
+        <!-- <mesh file="../objects/meshes/buttonbox/stoptop.stl" name="stoptop"/> -->
+        <mesh file="../objects/meshes/buttonbox/stopbot_15x15.STL" name="stopbot"/>
+        <mesh file="../objects/meshes/buttonbox/stoptop_15x15.STL" name="stoptop"/>
         <mesh file="../objects/meshes/buttonbox/stopbutton.stl" name="stopbutton"/>
         <mesh file="../objects/meshes/buttonbox/stopbuttonrim.stl" name="stopbuttonrim"/>
         <mesh file="../objects/meshes/buttonbox/stopbuttonrod.stl" name="stopbuttonrod"/>
-        <mesh file="../objects/meshes/buttonbox/stoptop.stl" name="stoptop"/>
     </asset>
 
 </mujocoinclude>

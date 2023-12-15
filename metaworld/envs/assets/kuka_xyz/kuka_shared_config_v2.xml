@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Usage:
+
+<mujoco>
+	<compiler meshdir="../meshes/sawyer" ...></compiler>
+	<include file="shared_config.xml"></include>
+    (new stuff)
+	<worldbody>
+		<include file="sawyer_xyz_base.xml"></include>
+        (new stuff)
+	</worldbody>
+</mujoco>
+-->
+
+
+<mujoco>
+
+    <asset>
+        <mesh name="pedestal" file="sawyer/pedestal.stl" />
+        <!-- <mesh name="base" file="sawyer/base.stl" /> -->
+        <!-- <mesh name="l0" file="sawyer/l0.stl" /> -->
+        <mesh name="head" file="sawyer/head.stl" />
+        <!-- <mesh name="l1" file="sawyer/l1.stl" />
+        <mesh name="l2" file="sawyer/l2.stl" />
+        <mesh name="l3" file="sawyer/l3.stl" />
+        <mesh name="l4" file="sawyer/l4.stl" />
+        <mesh name="l5" file="sawyer/l5.stl" />
+        <mesh name="l6" file="sawyer/l6.stl" /> -->
+        <mesh name="eGripperBase" file="sawyer/eGripperBase.stl" />
+        <!--  ================= KUKA ================= /-->
+        <mesh name="kuka_link_0_mesh" file="kuka/kuka_link_0.stl" />
+        <mesh name="kuka_link_1_mesh" file="kuka/kuka_link_1.stl" />
+        <mesh name="kuka_link_2_mesh" file="kuka/kuka_link_2.stl" />
+        <mesh name="kuka_link_3_mesh" file="kuka/kuka_link_3.stl" />
+        <mesh name="kuka_link_4_mesh" file="kuka/kuka_link_4.stl" />
+        <mesh name="kuka_link_5_mesh" file="kuka/kuka_link_5.stl" />
+        <mesh name="kuka_link_6_mesh" file="kuka/kuka_link_6.stl" />
+        <mesh name="kuka_link_7_mesh" file="kuka/kuka_link_7.stl" />
+
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/base_mount.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/base.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/driver.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/coupler.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/follower.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/pad.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/silicone_pad.stl"/>
+        <mesh class="2f85" file="kuka/robotiq_2f85/assets/spring_link.stl"/>
+
+        <material name="metal" rgba="0.58 0.58 0.58 1"/>
+        <material name="silicone" rgba="0.1882 0.1882 0.1882 1"/>
+        <material name="gray" rgba="0.4627 0.4627 0.4627 1"/>
+        <material name="black" rgba="0.149 0.149 0.149 1"/>
+
+        <material name="kuka_orange" rgba="1.0 0.423529411765 0.0392156862745 1.0"/>
+        <!-- <material name="kuka_grey" rgba="0.4 0.4 0.4 1.0"/> -->
+        <!-- <material name="kuka_orange" rgba="0.65 0.65 0.65 1.0"/> -->
+        <material name="kuka_grey" rgba="0.75 0.75 0.75 1.0"/>
+
+
+	    <mesh name="mug_mesh" file="objects/mug.stl"  scale="0.0006 0.0006 0.0006"/>
+        <texture file="marble.png" name="marble" />
+        <texture file="navy_blue.png" name="navy_blue" />
+        <texture file="wood_light.png" name="table_texture" type="2d"/>
+        <texture file="wood_light.png" name="wood_texture"/>
+        <texture file="tennis.png" name="tennis_green"/>
+
+        <material name="marble" shininess="0.3" rgba="0.9 0.9 0.9 1" specular="1" texture="marble"/>
+        <material name="navy_blue" shininess="0.3" rgba="0.9 0.9 0.9 1" specular="1" texture="navy_blue"/>
+        <material name="tennis_green" shininess="0.3" rgba="0.9 0.9 0.9 1" specular="1" texture="tennis_green"/>
+        <material name="wood_material" rgba="1 1 1 1" shininess="0.1" specular="0.4" texture="wood_texture" />
+        <material name="table_material" rgba="1 1 1 1" shininess="0.1" specular="0.4" texture="table_texture" />
+
+        <texture name="wood" file="../textures/wood.png" type="cube"/>
+        <material shininess=".1" name="wood" texture="wood" specular="0.4"/>
+
+        <texture name="real_door" file="../textures/real_door.png" type="cube"/>
+        <material shininess=".1" name="real_door" texture="real_door" specular=".4"/>
+
+        <texture name="darkwood" file="../textures/darkwood.png" type="cube"/>
+        <material shininess=".1" name="darkwood" texture="darkwood" specular="0.4"/>
+
+        <texture name="granite" file="../textures/granite.png" type="2d"/>
+        <material shininess=".1" name="granite" texture="granite" specular="0.4"/>
+
+        <texture name="light_wood" file="../textures/light_wood.png" type="cube"/>
+        <material shininess=".1" name="light_wood" texture="light_wood" specular="0.4"/>
+
+        <texture name="light_wood_v2" file="../textures/light_wood_v2.png" type="cube"/>
+        <material shininess=".1" name="light_wood_v2" texture="light_wood_v2" specular="0.4"/>
+
+        <texture name="light_wood_v3" file="../textures/light_wood_v3.png" type="2d"/>
+        <material shininess=".1" name="light_wood_v3" texture="light_wood_v3" specular="0.4"/>
+
+        <texture builtin="gradient" height="256" rgb1=".9 .9 1." rgb2=".2 .3 .4" type="skybox" width="256"/>
+    </asset>
+
+    <!-- <compiler angle="radian" meshdir="../meshes/sawyer"/> -->
+    <compiler inertiafromgeom="auto" angle="radian" coordinate="local" eulerseq="XYZ" meshdir="../meshes" texturedir="../textures"/>
+
+    <option timestep='0.0025' iterations="50" tolerance="1e-10" solver="Newton" jacobian="dense" cone="elliptic"/>     
+    <option impratio="10"/>
+
+    <default>
+        <joint limited="true"
+               damping="1"
+               stiffness="0"
+               armature=".1"
+               user="0"/>
+        <geom solref="0.02 1"
+              solimp="1 1 0"
+             
+              />
+        <motor ctrllimited="true" ctrlrange="-1 1"/>
+        <position ctrllimited="true"/>
+
+        <default class="visual">
+            <geom contype="0" conaffinity="0"/>
+        </default>
+        <default class="collision">
+            <geom contype="1" conaffinity="1" friction=".6 0.005 0.0001"/>
+        </default>
+
+
+        <default class="2f85">
+            <mesh scale="0.001 0.001 0.001"/>
+            <general biastype="affine"/>
+
+            <joint axis="1 0 0"/>
+            <default class="driver">
+                <joint range="0 0.8" armature="0.005" damping="0.1" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+            </default>
+            <default class="follower">
+                <joint range="-0.872664 0.872664" pos="0 -0.018 0.0065" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+            </default>
+            <default class="spring_link">
+                <joint range="-0.29670597283 0.8" stiffness="0.05" springref="2.62" damping="0.00125"/>
+            </default>
+            <default class="coupler">
+                <joint range="-1.57 0" solimplimit="0.95 0.99 0.001" solreflimit="0.005 1"/>
+            </default>
+
+            <default class="gripper_visual">
+                <geom type="mesh" contype="0" conaffinity="0" group="2"/>
+            </default>
+            <default class="gripper_collision">
+                <geom type="mesh" group="3"/>
+                <default class="pad_box1">
+                <geom mass="0" type="box" pos="0 -0.0026 0.028125" size="0.011 0.004 0.009375" friction="0.7"
+                    solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.55 0.55 0.55 1"/>
+                </default>
+                <default class="pad_box2">
+                <geom mass="0" type="box" pos="0 -0.0026 0.009375" size="0.011 0.004 0.009375" friction="0.6"
+                    solimp="0.95 0.99 0.001" solref="0.004 1" priority="1" rgba="0.45 0.45 0.45 1"/>
+                </default>
+            </default>
+        </default>
+
+    </default>
+
+    <contact>
+        <exclude body1="base" body2="left_driver"/>
+        <exclude body1="base" body2="right_driver"/>
+        <exclude body1="base" body2="left_spring_link"/>
+        <exclude body1="base" body2="right_spring_link"/>
+        <exclude body1="right_coupler" body2="right_follower"/>
+        <exclude body1="left_coupler" body2="left_follower"/>
+    </contact>
+
+    <tendon>
+        <fixed name="split">
+        <joint joint="right_driver_joint" coef="0.5"/>
+        <joint joint="left_driver_joint" coef="0.5"/>
+        </fixed>
+    </tendon>
+
+    <equality>
+        <connect anchor="0 0 0" body1="right_follower" body2="right_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+        <connect anchor="0 0 0" body1="left_follower" body2="left_coupler" solimp="0.95 0.99 0.001" solref="0.005 1"/>
+        <joint joint1="right_driver_joint" joint2="left_driver_joint" polycoef="0 1 0 0 0" solimp="0.95 0.99 0.001"
+        solref="0.005 1"/>
+    </equality>
+
+    <!-- 
+    The general actuator below is a customized position actuator (with some damping) where
+    gainprm[0] != kp (see http://mujoco.org/book/modeling.html#position).
+    The reason why gainprm[0] != kp is because the control input range has to be re-scaled to
+    [0, 255]. The joint range is currently set at [0, 0.8], the control range is [0, 255] and
+    kp = 100. Tau = Kp * scale * control_input - Kp * error, max(Kp * scale * control_input) = 0.8,
+    hence scale = 0.8 * 100 / 255 
+    -->
+
+
+    <actuator>
+        <general class="2f85" name="fingers_actuator" tendon="split" forcerange="-5 5" ctrlrange="0 255"
+        gainprm="0.3137255 0 0" biasprm="0 -100 -10"/>
+    </actuator>
+
+</mujoco>
